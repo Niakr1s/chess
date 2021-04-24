@@ -1,0 +1,13 @@
+<div *ngIf="!connected">
+  <input type="text" [(ngModel)]="username" />
+  <button (click)="onConnect()">Connect</button>
+</div>
+
+<div *ngIf="connected">
+  <input type="text" [(ngModel)]="message" />
+  <button (click)="onMessage()">Send</button>
+</div>
+
+<div *ngFor="let m of messages">
+  <div>{{ m.username }}: {{ m.message }}</div>
+</div>
