@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/niakr1s/chess/events"
 	"github.com/niakr1s/chess/server"
 )
 
@@ -14,7 +15,7 @@ func main() {
 		for c := range s.Clients {
 			for m := range c.From() {
 				log.Println(m)
-				if m, ok := m.(server.ChatMessageEvent); ok {
+				if m, ok := m.(events.ChatMessageEvent); ok {
 					c.To() <- m
 				}
 			}

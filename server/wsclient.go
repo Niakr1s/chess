@@ -5,19 +5,22 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
+	"github.com/niakr1s/chess/events"
 )
 
 type WsClient struct {
 	Username string
-	from     chan interface{}
-	to       chan interface{}
+	from     chan events.Event
+	to       chan events.Event
 	conn     *websocket.Conn
+	done     chan struct{}
 }
 
 func newWsClient(conn *websocket.Conn) *WsClient {
 	res := &WsClient{
-		from: make(chan interface{}),
-		to:   make(chan interface{}),
+		from: make(chan events.Event),
+		to:   make(chan events.Event),
+		done: make(chan struct{}),
 		conn: conn,
 	}
 	go res.wireConnToFromChannel()
@@ -25,16 +28,20 @@ func newWsClient(conn *websocket.Conn) *WsClient {
 	return res
 }
 
-func (c *WsClient) From() <-chan interface{} {
+func (c *WsClient) From() <-chan events.Event {
 	return c.from
 }
 
-func (c *WsClient) To() chan<- interface{} {
+func (c *WsClient) To() chan<- events.Event {
 	return c.to
 }
 
 func (c *WsClient) Close() error {
 	return c.conn.Close()
+}
+
+func (c *WsClient) Done() <-chan struct{} {
+	return c.done
 }
 
 func (c *WsClient) waitForUsername(timeout time.Duration) bool {
@@ -48,7 +55,7 @@ func (c *WsClient) waitForUsername(timeout time.Duration) bool {
 			}
 			return false
 		case e := <-c.from:
-			if nm, ok := e.(AuthUsernameEvent); ok {
+			if nm, ok := e.(events.AuthUsernameEvent); ok {
 				log.Printf("got username for client: %s", nm.Username)
 				c.Username = nm.Username
 				return true
@@ -59,7 +66,7 @@ func (c *WsClient) waitForUsername(timeout time.Duration) bool {
 
 func (c *WsClient) wireToChannelToConn() {
 	for e := range c.to {
-		raw, err := c.eventToJson(e)
+		raw, err := events.EventToJson(e)
 		if err != nil {
 			log.Printf("couldn't convert event to json: %v", err)
 			continue
@@ -77,6 +84,7 @@ func (c *WsClient) wireConnToFromChannel() {
 	defer func() {
 		close(c.from)
 		close(c.to)
+		close(c.done)
 	}()
 
 	for {
@@ -85,7 +93,7 @@ func (c *WsClient) wireConnToFromChannel() {
 			log.Printf("connection closed")
 			return
 		}
-		e, err := c.jsonToEvent(body)
+		e, err := events.JsonToEvent(body, c.Username)
 		if err != nil {
 			log.Printf("unknown event")
 			continue
