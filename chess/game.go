@@ -6,19 +6,15 @@ import (
 )
 
 type Game struct {
-	currentPlayer Color
-	board         *ChessBoard
+	CurrentPlayer Color       `json:"currentPlayer"`
+	Board         *ChessBoard `json:"chessboard"`
 }
 
 func NewGame() *Game {
 	return &Game{
-		currentPlayer: White,
-		board:         NewChessBoard(),
+		CurrentPlayer: White,
+		Board:         NewChessBoard(),
 	}
-}
-
-func (g Game) CurrentPlayer() Color {
-	return g.currentPlayer
 }
 
 func (g *Game) MoveStr(from, to string) error {
@@ -26,22 +22,22 @@ func (g *Game) MoveStr(from, to string) error {
 	if err != nil {
 		return err
 	}
-	fromFig := g.board.GetFigure(fromPos)
-	if fromFig != nil && !SameColor(fromFig.Color, g.currentPlayer) {
+	fromFig := g.Board.GetFigure(fromPos)
+	if fromFig != nil && !SameColor(fromFig.Color, g.CurrentPlayer) {
 		return fmt.Errorf("wrong color")
 	}
-	err = g.board.MoveStr(from, to)
+	err = g.Board.MoveStr(from, to)
 	if err != nil {
 		return err
 	}
-	g.currentPlayer = Opponent(g.currentPlayer)
+	g.CurrentPlayer = Opponent(g.CurrentPlayer)
 	return nil
 }
 
 func (g Game) String() string {
 	b := strings.Builder{}
-	b.WriteString(fmt.Sprintf("      %s turn\n", g.currentPlayer))
-	b.WriteString(g.board.String())
+	b.WriteString(fmt.Sprintf("      %s turn\n", g.CurrentPlayer))
+	b.WriteString(g.Board.String())
 	b.WriteString("\n")
 	return b.String()
 }

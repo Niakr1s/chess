@@ -21,7 +21,7 @@ export class AppComponent implements OnInit {
       },
     });
     ws.next({
-      event: 'auth:name',
+      event: 'auth:username',
       data: { username: 'username' },
     });
     timer(200, 1000).subscribe({

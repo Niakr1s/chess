@@ -6,17 +6,12 @@ import (
 )
 
 type ChessBoard struct {
-	board     [][]*Figure
+	Board     [8][8]*Figure `json:"board"`
 	graveYard []*Figure
 }
 
 func NewCleanChessBoard() *ChessBoard {
-	board := make([][]*Figure, 8)
-	for i := 0; i < len(board); i++ {
-		board[i] = make([]*Figure, 8)
-	}
 	return &ChessBoard{
-		board:     board,
 		graveYard: make([]*Figure, 0),
 	}
 }
@@ -24,15 +19,15 @@ func NewCleanChessBoard() *ChessBoard {
 func NewChessBoard() *ChessBoard {
 	board := NewCleanChessBoard()
 
-	fillFigureRow(board.board[0], White)
-	fillPawnRow(board.board[1], White)
-	fillPawnRow(board.board[6], Black)
-	fillFigureRow(board.board[7], Black)
+	fillFigureRow(&board.Board[0], White)
+	fillPawnRow(&board.Board[1], White)
+	fillPawnRow(&board.Board[6], Black)
+	fillFigureRow(&board.Board[7], Black)
 
 	return board
 }
 
-func fillPawnRow(row []*Figure, color Color) {
+func fillPawnRow(row *[8]*Figure, color Color) {
 	for i := 0; i < len(row); i++ {
 		row[i] = &Figure{
 			Name:  FigurePawn,
@@ -41,7 +36,7 @@ func fillPawnRow(row []*Figure, color Color) {
 	}
 }
 
-func fillFigureRow(row []*Figure, color Color) {
+func fillFigureRow(row *[8]*Figure, color Color) {
 	for _, col := range []int{0, 7} {
 		row[col] = &Figure{
 			Name:  FigureRook,
@@ -71,7 +66,7 @@ func fillFigureRow(row []*Figure, color Color) {
 }
 
 func (b ChessBoard) GetFigure(pos Pos) *Figure {
-	return b.board[pos.Row][pos.Col]
+	return b.Board[pos.Row][pos.Col]
 }
 
 func (b *ChessBoard) MoveStr(from, to string) error {
@@ -106,13 +101,13 @@ func (b *ChessBoard) Move(from, to Pos) error {
 }
 
 func (b *ChessBoard) removeFigure(pos Pos) *Figure {
-	f := b.board[pos.Row][pos.Col]
-	b.board[pos.Row][pos.Col] = nil
+	f := b.Board[pos.Row][pos.Col]
+	b.Board[pos.Row][pos.Col] = nil
 	return f
 }
 
 func (b *ChessBoard) setFigure(f *Figure, pos Pos) {
-	b.board[pos.Row][pos.Col] = f
+	b.Board[pos.Row][pos.Col] = f
 }
 
 func (b ChessBoard) GetPossibleMoves(pos Pos) (Moves, error) {
@@ -219,14 +214,14 @@ func (b ChessBoard) String() string {
 	builder := strings.Builder{}
 	builder.WriteString(header + "\n")
 
-	for r := len(b.board) - 1; r >= 0; r-- {
-		row := b.board[r]
+	for r := len(b.Board) - 1; r >= 0; r-- {
+		row := b.Board[r]
 		builder.WriteString(fmt.Sprintf("%d %s\n", r+1, b.rowToString(row)))
 	}
 	return builder.String()
 }
 
-func (b ChessBoard) rowToString(row []*Figure) string {
+func (b ChessBoard) rowToString(row [8]*Figure) string {
 	glyphs := []string{}
 	for _, f := range row {
 		glyph := " "
