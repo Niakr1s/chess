@@ -97,6 +97,7 @@ func (c *WsClient) wireConnToFromChannel() {
 			log.Printf("unknown event")
 			continue
 		}
+		log.Printf("got event %v", e)
 		c.from <- e
 	}
 }
