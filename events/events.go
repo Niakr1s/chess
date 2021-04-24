@@ -37,6 +37,15 @@ func (e ChatUserJoinEvent) Eventname() string {
 	return "chat:userJoin"
 }
 
+type ChatUserLeaveEvent struct {
+	Username string    `json:"username"`
+	Time     time.Time `json:"time"`
+}
+
+func (e ChatUserLeaveEvent) Eventname() string {
+	return "chat:userLeave"
+}
+
 type ChessMoveEvent struct {
 	From     string `json:"from"`
 	To       string `json:"to"`

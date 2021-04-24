@@ -44,9 +44,10 @@ func (c *Chat) AddClient(client Client) {
 
 func (c *Chat) RemoveClient(username string) {
 	c.mu.Lock()
-	defer c.mu.Unlock()
-
 	delete(c.clients, username)
+	c.mu.Unlock()
+
+	c.broadcast(events.ChatUserLeaveEvent{Username: username, Time: time.Now()})
 }
 
 func (c *Chat) broadcast(e events.Event) {
