@@ -76,6 +76,7 @@ func (h *WsHandler) wsHandler(w http.ResponseWriter, r *http.Request) {
 
 	go func(username string) {
 		<-client.Done()
+		log.Printf("removing client %s\n", username)
 		h.removeClientName(username)
 	}(client.Username)
 

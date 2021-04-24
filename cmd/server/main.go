@@ -4,21 +4,24 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/niakr1s/chess/chat"
 	"github.com/niakr1s/chess/events"
+	"github.com/niakr1s/chess/lobby"
 	"github.com/niakr1s/chess/server"
 )
 
 func main() {
 	s := server.NewServer()
 
+	Chat := chat.NewChat()
+	Lobby := &lobby.Lobby{}
+
 	go func() {
 		for c := range s.Clients {
-			for m := range c.From() {
-				log.Println(m)
-				if m, ok := m.(events.ChatMessageEvent); ok {
-					c.To() <- m
-				}
-			}
+			chatCh, chessCh := events.SplitChannel(c.From())
+
+			Chat.AddClient(chat.Client{Username: c.Username, Input: chatCh, Output: c.To()})
+			Lobby.AddPlayer(lobby.Player{Username: c.Username, Input: chessCh, Output: c.To()})
 		}
 	}()
 

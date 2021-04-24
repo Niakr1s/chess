@@ -1,6 +1,8 @@
 package events
 
-import "strings"
+import (
+	"strings"
+)
 
 // SplitChannel splits channel into separate channels, based on prefixes.
 func SplitChannel(in <-chan Event) (chatCh <-chan Event, chessCh <-chan Event) {

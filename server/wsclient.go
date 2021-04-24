@@ -71,7 +71,6 @@ func (c *WsClient) wireToChannelToConn() {
 			log.Printf("couldn't convert event to json: %v", err)
 			continue
 		}
-		log.Printf("%s", string(raw))
 		err = c.conn.WriteMessage(websocket.TextMessage, raw)
 		if err != nil {
 			log.Printf("couldn't write json to conn: %v", err)

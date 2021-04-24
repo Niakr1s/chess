@@ -22,7 +22,7 @@ export class AppComponent implements OnInit {
     });
     ws.next({
       event: 'auth:username',
-      data: { username: 'username' },
+      data: { username: 'username' + Math.floor(Math.random() * 100) },
     });
     timer(200, 1000).subscribe({
       next: () => {

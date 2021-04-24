@@ -28,6 +28,15 @@ func (cme ChatMessageEvent) Eventname() string {
 	return "chat:message"
 }
 
+type ChatUserJoinEvent struct {
+	Username string    `json:"username"`
+	Time     time.Time `json:"time"`
+}
+
+func (e ChatUserJoinEvent) Eventname() string {
+	return "chat:userJoin"
+}
+
 type ChessMoveEvent struct {
 	From     string `json:"from"`
 	To       string `json:"to"`
