@@ -4,10 +4,10 @@ type FigureName string
 
 const (
 	FigureKing   FigureName = "king"   // король
-	FigureRook   FigureName = "rook"   // ладья
-	FigureBishop FigureName = "bishop" // слон
 	FigureQueen  FigureName = "queen"  // ферзь
+	FigureBishop FigureName = "bishop" // слон
 	FigureKnight FigureName = "knight" // конь
+	FigureRook   FigureName = "rook"   // ладья
 	FigurePawn   FigureName = "pawn"   // пешка
 )
 

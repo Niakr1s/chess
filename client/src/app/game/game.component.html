@@ -1,0 +1,7 @@
+<div class="chessboard" *ngIf="chessboard">
+  <div class="figureRow" *ngFor="let row of chessboard!.board.reverse()">
+    <div class="figure" *ngFor="let f of row">
+      {{ f ? f.toString() : "" }}
+    </div>
+  </div>
+</div>

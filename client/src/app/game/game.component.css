@@ -1,0 +1,7 @@
+.chessboard {
+  font-size: 30px;
+}
+
+.figure {
+  display: inline-block;
+}

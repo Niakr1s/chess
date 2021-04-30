@@ -30,7 +30,7 @@ type players [2]Player
 
 func (p players) notifyNewTurn(game chess.Game) {
 	for _, player := range p {
-		player.Output <- events.ChessNewTurnEvent{Game: game}
+		player.Output <- events.ChessNewTurnEvent{CurrentPlayer: game.CurrentPlayer, Board: game.Board.Encode()}
 	}
 }
 

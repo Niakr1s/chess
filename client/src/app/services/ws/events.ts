@@ -1,4 +1,8 @@
-export type Event = ChatMessageEvent | ChatUserJoinEvent | AuthUsernameEvent;
+export type Event =
+  | ChatMessageEvent
+  | ChatUserJoinEvent
+  | AuthUsernameEvent
+  | ChessNewTurnEvent;
 
 export interface ChatMessageEvent {
   event: 'chat:message';
@@ -19,5 +23,13 @@ export interface AuthUsernameEvent {
   event: 'auth:username';
   data: {
     username: string;
+  };
+}
+
+export interface ChessNewTurnEvent {
+  event: 'chess:newTurn';
+  data: {
+    board: string;
+    currentPlayer: number;
   };
 }

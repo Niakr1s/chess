@@ -232,3 +232,20 @@ func (b ChessBoard) rowToString(row [8]*Figure) string {
 	}
 	return strings.Join(glyphs, " ")
 }
+
+func (b ChessBoard) Encode() []byte {
+	res := make([]byte, 0, 8*8)
+
+	for row := 0; row < 8; row++ {
+		for col := 0; col < 8; col++ {
+			f := b.Board[row][col]
+			if f == nil {
+				res = append(res, 0)
+			} else {
+				res = append(res, f.Encode())
+			}
+		}
+	}
+
+	return res
+}

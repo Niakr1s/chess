@@ -57,7 +57,8 @@ func (cme ChessMoveEvent) Eventname() string {
 }
 
 type ChessNewTurnEvent struct {
-	chess.Game
+	CurrentPlayer chess.Color `json:"currentPlayer"`
+	Board         []byte      `json:"board"`
 }
 
 func (cse ChessNewTurnEvent) Eventname() string {
